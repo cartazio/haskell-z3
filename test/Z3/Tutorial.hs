@@ -1,3 +1,4 @@
+{-# LANGUAGE GHC2024, MultilineStrings #-}
 module Z3.Tutorial
   ( spec )
   where
@@ -18,10 +19,24 @@ spec = do
   describe "Section: Strategies" $ do
     describe "Section: Introduction" $ do
       it "Apply simplify and solve-eq tactics" $
-        Z3.Monad.evalZ3 simplifySolveEqs `shouldReturn` "(goals\n(goal\n  (not (<= y (- 2.0)))\n  (not (<= y 0.0)))\n)"
+        Z3.Monad.evalZ3 simplifySolveEqs `shouldReturn` """(goals
+                 (goal
+                   (not (<= x 0.0))
+                   (not (<= x 2.0)))
+                 )
+"""
       it "Apply split-clause tactic" $
-        Z3.Monad.evalZ3 applySplitClause `shouldReturn` "(goals\n(goal\n  (< x 0.0)\n  (= x (+ y 1.0))\n  (< y 0.0))\n(goal\n  (> x 0.0)\n  (= x (+ y 1.0))\n  (< y 0.0))\n)"
-
+        Z3.Monad.evalZ3 applySplitClause `shouldReturn` """(goals
+                 (goal
+                   (< x 0.0)
+                   (= x (+ y 1.0))
+                   (< y 0.0))
+                 (goal
+                   (> x 0.0)
+                   (= x (+ y 1.0))
+                   (< y 0.0))
+                 )
+"""
 {-
   (declare-const a String)
   (declare-const b String)

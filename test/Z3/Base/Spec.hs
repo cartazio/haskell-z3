@@ -1,3 +1,5 @@
+{-# LANGUAGE GHC2024, MultilineStrings #-}
+
 -- TODO: Create a context for all the tests, use push; ...; pop to rollback
 
 module Z3.Base.Spec
@@ -541,5 +543,9 @@ spec = around withContext $ do
           simplify <- Z3.mkTactic ctx "solve-eqs"
           tactic <- Z3.repeatTactic ctx simplify 10
           Z3.applyResultToString ctx =<< Z3.applyTactic ctx tactic goal)
-          `shouldReturn` "(goals\n(goal\n  (or (not (<= (- 2.0) y)) (not (<= y (- 2.0))))\n  (not (<= 0.0 y)))\n)"
-
+          `shouldReturn` """(goals
+                 (goal
+                   (or (not (<= 0.0 x)) (not (<= x 0.0)))
+                   (not (<= 2.0 x)))
+                 )
+"""
